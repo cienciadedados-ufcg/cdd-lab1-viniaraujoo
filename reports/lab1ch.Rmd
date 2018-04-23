@@ -3,11 +3,13 @@ title: "lab01ch01"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(here)
+theme_set(theme_bw())
 ```
 
-## Analise do arquivo
+## Conjunto de dados utilizado
 
 ```{r}
 dados = read_csv(here("data/series_from_imdb.csv"), 
@@ -20,32 +22,63 @@ dados = read_csv(here("data/series_from_imdb.csv"),
     
 ```
 
-## Subconjunto de séries
-1.How to Get Away with Murder
-2.Mr Robot
-3.13 Reasons Why
-4.The Mentalist
+## Conjunto de dados utilizado
+Diante do conjunto de dados coletados do site IMDB, onde contem dados sobre algumas séries populares na atualidade. 
+Na analise desse notebook foram escolhidas 3 séries bastante popular atualmente, são elas: The Blacklist, House of Cards, Vikings. 
+
 ```{r}
-    dados_escolhidos <- dados %>% filter(series_name %in% c("How to Get Away with Murder", "Mr Robot","13 Reasons Why","The Mentalist"))
+    dados_escolhidos <- dados %>% filter(series_name %in% c("The Blacklist","House of Cards","Vikings"))
     
 ```
 
-## Qual das séries que você escolheu é mais bem avaliada no IMDB? 
-Considerando o grafico utilizando o boxplot podemos observar que a serie Mr.Robot com uma concentração melhor e a mediana dele como algo considerado para os episodios. Mas consideramos uma difer
+Aanalisando os dados escolhidos observamos que os dados não possui valores estranhos e um numero de variação consideravel e desse modo podemos analisar e utilizar o conjunto de dados sem nescessariamente utilizar uma filtragem nos dados. 
+
+## Primeira pergunta 
+Analisaremos o quão bem avaliada as seria no IMDB e desse modo tentar a chegar a uma aproximação de qual serie diante do conjunto escolhido seria a mais bem avaliada de acordo com os votos dos usuarios do site IMDB.
 ```{r}
     dados_escolhidos %>% ggplot(aes(x= series_name,y = user_rating,color=series_name)) +geom_boxplot(width = .5, outlier.color = NA) + geom_jitter(width = 0.2)
         
     
 ```
+Como podemos observa atravez do bloxport representado acima que as avaliações dos episodios das series se concentram em algo em torno de 8.0 e 8.7.
 
-## Muda de acordo com as temporadas da série? 
+Observando o grafico assima podemos considerar que House of Cards é a seríe mais bem avaliada pelo usuario e observamos que as séries The Blacklist e Vikings quase empatados em suas medianas.
+
+Notamos que The Blacklist possui um numero um pouco superior de episodios e verificamos também que existe dados discrepantes com nota igual a 7. 
+
 
 ```{r}
-    dados_escolhidos %>% ggplot(aes(x = season, y = user_rating,color = series_name)) + geom_line()
+sum <- dados_escolhidos %>% 
+    group_by(series_name) %>% 
+    summarise(n_episodios = n(),media = mean(user_rating), mediana =  median(user_rating))
+    sum
+
+
 ```
 
+Podemos observar á partir desta tabela que os valores da media e da mediana como valores muito proximo, significando que ambos são respresentativos para os dados. 
+Podemos observa que a diferença de House of Cards e Vikings como algo de 0.3 decimos em relação a sua media e 0.2 em relação a sua mediana.
+E observamos que a Vikings e The Blacklist como valores muito proximos. 
 
-## Including Plots
+
+## Mudanças de acordo com as temporadas.
+Analisaremos de acordo com as temporadas das series se ocorreu mudanças siginificativas na avaliações de seus episodios.
+
+```{r}
+    dados_escolhidos %>% ggplot(aes(x= season_ep,y = user_rating,color=season,group = season)) +
+    geom_line() +
+    geom_point() + 
+    facet_wrap(~ series_name) 
+    
+```
+Considerando de forma separada para cada série analisamos o pontos atribuidos aos episodios de acordo com a temporadas e desse modo verificamos que não ocorre uma variação siginificativa ao longo das temporadas, podemos observa apenas caso especifico na serie The Blacklist onde um episodio recebeu a nota 7.0 algo que se comparamos nas outras temporadas da série isto não ocorreu no mas assim como nas outras séries os valores permanecem na mesma faixa de valores de acordo com as temporadas, outro caso especifico que obsrvamos é na séries vinkgs onde podemos observa um episódio da 4 temporada que obteve uma nota alta perante as outras temporadas. 
+
+## Conclusão
+Diante das analise observadas assima, consideramos que a serie House of Cards como mais bem avaliada pelos usuarios no site IMDB diante no conjunto da amostra avaliada, tendo uma difereça pequena entre as outras duas seríes avaliadas no processo, uma diferença proxima a 0.3 algo relativamente pequeno, e consideramos também algo como proximo de um empate entre as séries de Vikings e The Blacklsit, mesmo analisando cada série atraves de sua temporada observamos que a faixa de valores de votos como algo que não tem uma variação brusca diante das temporadas e desse modo obsrvamos que mesmo com as diferentes temporadas House of Cards permanece muito bem avaliada no site. 
+
+## Analise da qualidade dos episodios
+
+
 
 You can also embed plots, for example:
 
