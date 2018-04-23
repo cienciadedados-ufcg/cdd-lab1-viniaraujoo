@@ -1,0 +1,56 @@
+---
+title: "lab01ch01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Analise do arquivo
+
+```{r}
+dados = read_csv(here("data/series_from_imdb.csv"), 
+                    progress = FALSE,
+                    col_types = cols(.default = col_double(), 
+                                     series_name = col_character(), 
+                                     episode = col_character(), 
+                                     url = col_character(),
+                                     season = col_character()))
+    
+```
+
+## Subconjunto de séries
+1.How to Get Away with Murder
+2.Mr Robot
+3.13 Reasons Why
+4.The Mentalist
+```{r}
+    dados_escolhidos <- dados %>% filter(series_name %in% c("How to Get Away with Murder", "Mr Robot","13 Reasons Why","The Mentalist"))
+    
+```
+
+## Qual das séries que você escolheu é mais bem avaliada no IMDB? 
+Considerando o grafico utilizando o boxplot podemos observar que a serie Mr.Robot com uma concentração melhor e a mediana dele como algo considerado para os episodios. Mas consideramos uma difer
+```{r}
+    dados_escolhidos %>% ggplot(aes(x= series_name,y = user_rating,color=series_name)) +geom_boxplot(width = .5, outlier.color = NA) + geom_jitter(width = 0.2)
+        
+    
+```
+
+## Muda de acordo com as temporadas da série? 
+
+```{r}
+    dados_escolhidos %>% ggplot(aes(x = season, y = user_rating,color = series_name)) + geom_line()
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
