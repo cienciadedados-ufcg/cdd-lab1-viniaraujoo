@@ -97,7 +97,7 @@ Analisaremos de acordo com as temporadas das séries se ocorreu mudanças sigini
                color=season,
                group = season)) +
     geom_line() +
-    geom_point() + 
+    geom_point(size = 0.8) + 
     facet_wrap(~ series_name) 
     
 ```
@@ -107,14 +107,44 @@ Considerando de forma separada para cada série analisamos os pontos atribuídos
 ## Conclusão
 Diante das análises observadas acima, consideramos que a série House of Cards como mais bem avaliada pelos usuários no site IMDB diante no conjunto avaliado, tendo uma diferença pequena entre as outras duas series avaliadas no processo em relação a suas médias e concentração de avaliações superiores.
 
-## Analise da qualidade dos episodios
+## Qual das séries que você escolheu tem episódios de qualidade mais irregular segundo o IMDB? A diferença é grande? Pequena?
 
-, podemos observa apenas caso específico na série The Blacklist onde um episódio recebeu a nota 7,0 algo que se comparamos nas outras temporadas isto não ocorreu no, mas assim como nas outras séries os valores permanecem na mesma faixa.
+Para responder a essa pergunta, iremos trabalhar com um conceito chamado desvio padrão, um parâmetro muito usado em estatística que indica o grau de variação de um conjunto de elementos. No nosso caso, usaremos o desvio padrão para indicar o grau de varição das avaliações dos episódios de uma série. Portanto, quanto maior o desvio padrão, maior será a irregularidade entre as notas dos episódios de uma série — ou seja, as notas variam muito de um episódio para outro.
 
-You can also embed plots, for example:
+```{r}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+dados_escolhidos %>%
+    group_by(series_name) %>%
+    summarise(dp = sd(user_rating)) %>%
+    ggplot(aes(x = reorder(series_name, dp), 
+           y = dp, 
+           fill = series_name)) +
+    geom_bar(stat = "identity",
+           alpha = .7, 
+           width = .75) +
+    labs(y = "Desvio Padrão", x = "Séries Escolhidas")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Pelo gráfico podemos observa que a série The Blacklist com um desvio padrão maior entre elas e desse modo está série possui uma maior irregularidade entre as notas de seus episódios tendem uma variação maior entre seus episódios, mas devemos lidar com valores extremos que pode afetar o desvio padrão e desse modo calculamos o IQR.
+A sigla IQR significa "Interquartile Range" (em português, Variação Interquartil) e é utilizada em análises estatísticas para ajudar nas conclusões a cerca de um conjunto de dados. Geralmente é mais preferível que a variância para se medir a dispersão de um conjunto de dados, pois exclui a maioria dos elementos discrepantes do conjunto.
+IQR nos ajuda pôs pouco varia independente da existência de valores muito extremos.
+
+O IQR é calculado levando em consideração a diferença entre o terceiro e primeiro quartil, ou seja, os 50% de valores mais concentrados.
+
+
+```{r}
+dados_escolhidos %>%
+    group_by(series_name) %>%
+    summarise(dp = IQR(user_rating)) %>%
+    ggplot(aes(x = reorder(series_name, dp), 
+           y = dp, 
+           fill = series_name)) +
+    geom_bar(stat = "identity",
+           alpha = .7, 
+           width = .75) +
+    labs(y = "IQR", x = "Séries Escolhidas")
+```
+
+## Conclusão
+Observando esse gráfico pode concluir que a série The Blacklist possui maior irregularidade entre as notas de seus episódios e diante da análise feita observamos também que a diferença perante as outras séries relativamente grande baseado nas medidas do desvio padrão e IQR. 
+
