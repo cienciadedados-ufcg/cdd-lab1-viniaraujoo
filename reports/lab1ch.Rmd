@@ -12,7 +12,7 @@ theme_set(theme_bw())
 ## Conjunto de dados utilizado
 
 ```{r}
-dados = read_csv(here("data/series_from_imdb.csv"), 
+dados <- read_csv(here("data/series_from_imdb.csv"), 
                     progress = FALSE,
                     col_types = cols(.default = col_double(), 
                                      series_name = col_character(), 
@@ -23,62 +23,93 @@ dados = read_csv(here("data/series_from_imdb.csv"),
 ```
 
 ## Conjunto de dados utilizado
-Diante do conjunto de dados coletados do site IMDB, onde contem dados sobre algumas séries populares na atualidade. 
-Na analise desse notebook foram escolhidas 3 séries bastante popular atualmente, são elas: The Blacklist, House of Cards, Vikings. 
+Diante do conjunto de dados coletados do site IMDB, onde contem dados sobre algumas séries populares na atualidade.
+Na análise desse notebook foram escolhidas 3 série bastante popular atualmente, são elas: The Blacklist, House of Cards, Vikings.
 
 ```{r}
-    dados_escolhidos <- dados %>% filter(series_name %in% c("The Blacklist","House of Cards","Vikings"))
+    dados_escolhidos <- dados %>% 
+    filter(series_name %in% c("The Blacklist",
+                              "House of Cards",
+                              "Vikings"))
     
 ```
 
-Aanalisando os dados escolhidos observamos que os dados não possui valores estranhos e um numero de variação consideravel e desse modo podemos analisar e utilizar o conjunto de dados sem nescessariamente utilizar uma filtragem nos dados. 
+Analisando os dados escolhidos observa que os dados não possuem valores estranhos e não possui um número de variação considerável e desse modo podemos analisar e utilizar o conjunto de dados sem necessariamente utilizar uma filtragem nos dados.
 
 ## Primeira pergunta 
-Analisaremos o quão bem avaliada as seria no IMDB e desse modo tentar a chegar a uma aproximação de qual serie diante do conjunto escolhido seria a mais bem avaliada de acordo com os votos dos usuarios do site IMDB.
+Analisaremos o quão bem avaliada as séres no IMDB e desse modo tentar a chegar a uma aproximação de qual serie diante do conjunto escolhido seria a mais bem avaliada de acordo com os votos dos usuarios do site IMDB.
+
 ```{r}
-    dados_escolhidos %>% ggplot(aes(x= series_name,y = user_rating,color=series_name)) +geom_boxplot(width = .5, outlier.color = NA) + geom_jitter(width = 0.2)
+    dados_escolhidos %>%
+    ggplot(aes(user_rating)) +
+    geom_histogram(binwidth = .1, fill = 'chocolate1') + 
+    scale_x_continuous(breaks = seq(7,10,0.5)) +
+    labs(y = "Número de ocorrências", x = "Ratings dos usuários")
+```
+
+Para conhecer o conjunto de dados consideramos o histograma acima para examinar as pontuações que os episódios receberam, como está descrito verificamos o número de ocorrências, ou seja, o número de episódios que receberam determinadas notas, colocou uma diferença de 1 decimo pela aproximação em que as notas se encontra. Em relação à distribuição das notas podemos observa que em sua maior parte está distribuídas entre 8,0 e 9,0.
+
+
+```{r}
+    dados_escolhidos %>% 
+    ggplot(aes(x= series_name,
+               y = user_rating,
+               color=series_name)) +
+    geom_boxplot(width = .5,
+                 outlier.color = NA) + 
+    geom_jitter(width = 0.2) +
+    labs(y = "Ratings dos usuários", x = "Séries Escolhidas")
         
     
 ```
-Como podemos observa atravez do bloxport representado acima que as avaliações dos episodios das series se concentram em algo em torno de 8.0 e 8.7.
 
-Observando o grafico assima podemos considerar que House of Cards é a seríe mais bem avaliada pelo usuario e observamos que as séries The Blacklist e Vikings quase empatados em suas medianas.
+De acordo com o gráfico acima podemos observa que House of Cards tem melhor avaliação se observarmos a mediana dos votos.
+Podemos observa neste gráfico que concentração de notas de House of Cards em sua maioria superior a 8,5 algo que não observamos nas outras séries avaliadas.
+As demais séries verificamos uma diferença pequena em relação às médias.
 
-Notamos que The Blacklist possui um numero um pouco superior de episodios e verificamos também que existe dados discrepantes com nota igual a 7. 
+Notamos que The Blacklist possui um número um pouco superior de episódios, e verificamos também que existe dados discrepantes com nota igual a 7.
 
 
 ```{r}
 sum <- dados_escolhidos %>% 
     group_by(series_name) %>% 
-    summarise(n_episodios = n(),media = mean(user_rating), mediana =  median(user_rating))
-    sum
+    summarise(n_episodios = n(),
+              media = mean(user_rating), 
+              mediana =  median(user_rating))
+
+ggplot(data = sum,aes(x = series_name)) +
+    geom_point(aes(x = series_name, y = media, color = "Média")) +
+    geom_point(aes(x = series_name, y = mediana, color = "Mediana"))
 
 
 ```
 
-Podemos observar á partir desta tabela que os valores da media e da mediana como valores muito proximo, significando que ambos são respresentativos para os dados. 
-Podemos observa que a diferença de House of Cards e Vikings como algo de 0.3 decimos em relação a sua media e 0.2 em relação a sua mediana.
-E observamos que a Vikings e The Blacklist como valores muito proximos. 
+Podemos observar que os valores da média e da mediana como valores muito próximo, significando que ambos são representativos para os dados.
 
 
 ## Mudanças de acordo com as temporadas.
-Analisaremos de acordo com as temporadas das series se ocorreu mudanças siginificativas na avaliações de seus episodios.
+Analisaremos de acordo com as temporadas das séries se ocorreu mudanças siginificativas na avaliação de seus episódios.
 
 ```{r}
-    dados_escolhidos %>% ggplot(aes(x= season_ep,y = user_rating,color=season,group = season)) +
+    dados_escolhidos %>% 
+    ggplot(aes(x= season_ep,
+               y = user_rating,
+               color=season,
+               group = season)) +
     geom_line() +
     geom_point() + 
     facet_wrap(~ series_name) 
     
 ```
-Considerando de forma separada para cada série analisamos o pontos atribuidos aos episodios de acordo com a temporadas e desse modo verificamos que não ocorre uma variação siginificativa ao longo das temporadas, podemos observa apenas caso especifico na serie The Blacklist onde um episodio recebeu a nota 7.0 algo que se comparamos nas outras temporadas da série isto não ocorreu no mas assim como nas outras séries os valores permanecem na mesma faixa de valores de acordo com as temporadas, outro caso especifico que obsrvamos é na séries vinkgs onde podemos observa um episódio da 4 temporada que obteve uma nota alta perante as outras temporadas. 
+
+Considerando de forma separada para cada série analisamos os pontos atribuídos a cada episódios de acordo com a temporada e desse modo verificamos que não ocorre uma variação significativa ao longo das temporadas.
 
 ## Conclusão
-Diante das analise observadas assima, consideramos que a serie House of Cards como mais bem avaliada pelos usuarios no site IMDB diante no conjunto da amostra avaliada, tendo uma difereça pequena entre as outras duas seríes avaliadas no processo, uma diferença proxima a 0.3 algo relativamente pequeno, e consideramos também algo como proximo de um empate entre as séries de Vikings e The Blacklsit, mesmo analisando cada série atraves de sua temporada observamos que a faixa de valores de votos como algo que não tem uma variação brusca diante das temporadas e desse modo obsrvamos que mesmo com as diferentes temporadas House of Cards permanece muito bem avaliada no site. 
+Diante das análises observadas acima, consideramos que a série House of Cards como mais bem avaliada pelos usuários no site IMDB diante no conjunto avaliado, tendo uma diferença pequena entre as outras duas series avaliadas no processo em relação a suas médias e concentração de avaliações superiores.
 
 ## Analise da qualidade dos episodios
 
-
+, podemos observa apenas caso específico na série The Blacklist onde um episódio recebeu a nota 7,0 algo que se comparamos nas outras temporadas isto não ocorreu no, mas assim como nas outras séries os valores permanecem na mesma faixa.
 
 You can also embed plots, for example:
 
