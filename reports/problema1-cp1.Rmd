@@ -148,3 +148,5 @@ dados_escolhidos %>%
 ## Conclusão
 Observando esse gráfico pode concluir que a série The Blacklist possui maior irregularidade entre as notas de seus episódios e diante da análise feita observamos também que a diferença perante as outras séries relativamente grande baseado nas medidas do desvio padrão e IQR. 
 
+
+
