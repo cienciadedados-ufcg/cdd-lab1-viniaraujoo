@@ -152,16 +152,7 @@ dados_escolhidos %>%
            width = .75) +
     labs(y = "IQR", x = "Séries Escolhidas")
 ```
-```{r}
-dados_escolhidos %>%
-    group_by(series_name) %>%
-    summarise(dp = IQR(user_rating))
-```
-```{r}
-dados_escolhidos %>%
-    group_by(series_name) %>%
-    summarise(dp = sd(user_rating))
-```
+
 
 ## Conclusão
 Observando esse gráfico pode concluir que a série The Blacklist possui maior irregularidade entre as notas de seus episódios e diante da análise feita observamos também que a diferença perante House of cards que apareceu em segundo no lugar no grafico, relativamente pequena baseado nas medidas do desvio padrão (0.09 a mais)  e IQR (0.25 a mais), por fim verificamos que a diferença de qualidade dos episódios de The Blacklist em relação a outras como pequena. 
