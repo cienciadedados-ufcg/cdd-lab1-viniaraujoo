@@ -183,4 +183,20 @@ dados_escolhidos %>%
 ## Conclusão
 Observando esse gráfico pode concluir que a série The Blacklist possui maior irregularidade entre as notas de seus episódios e diante da análise feita observamos também que a diferença perante House of cards que apareceu em segundo no lugar no grafico, relativamente pequena baseado nas medidas do desvio padrão (0.09 a mais)  e IQR (0.25 a mais), por fim verificamos que a diferença de qualidade dos episódios de The Blacklist em relação a outras como pequena. 
 
+## Episódios no início/fim da temporada são mais bem avaliados que os no meio? O que tende a ser melhor? Inícios ou finais de séries/temporadas?
+Analise em questão é sobre os episódios no início/ fim da temporada e verificas se existe alguma diferença entre eles e algo que consideramos que tende a ser melhor . 
 
+```{r}
+    dados_escolhidos %>% 
+    ggplot(aes(x = season_ep,
+               y = user_rating,
+               color = series_name,
+               group = series_name))+
+    geom_line() +
+    facet_grid(series_name ~ season) + 
+    labs(y = "Ratings dos usuários", x = "Numero de Episodio por Temporada")
+    
+```
+De acordo com o gráfico na primeira e segunda temporada verificamos que House of Cards tem seus episódios do início bem avaliados, mas com o decorrer da metade (temporada) seu nível cai e volta a subir no final da temporada, em relação à terceira e quarta verificamos que o início não foi tão bem, mas á série consegue manter um nível alto na metade/fim.
+The Blacklist mostra um comportamento padrão para as 4 temporadas de modo que seus episódios do início/fim tendem á ser mais bem avaliados do que os episódios da metade da temporada.
+Vikings apenas sua primeira temporada demostra um comportamento diferente das demais como observamos os primeiros/últimos episódios como não tão bem avaliados, mas no decorrer da metade seus episódios demostram um padrão muito bem avaliados, em relação as outras temporadas observa um comportamento padrão onde o início e metade da temporada se mantêm na mesma avaliação aumentando no episódio finais de cada temporada.
