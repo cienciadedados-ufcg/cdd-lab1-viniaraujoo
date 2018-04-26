@@ -1,7 +1,16 @@
 ---
 title: "problema1-cp1"
 author: "Vinicius Brandão"
-output: html_document
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_float: yes
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 ---
 
 ```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
@@ -12,7 +21,7 @@ theme_set(theme_bw())
 
 ## Conjunto de dados utilizado
 
-Análise exploratória de dados do IMDB sobre seriados de TV e Streaming. Os dados originais e as variáveis vem de https://github.com/nazareno/imdb-series. Lá tem a explicação de como os dados foram gerados e do significado de cada variável.
+Análise exploratória de dados do [IMDB](https://www.imdb.com/)  sobre seriados de TV e Streaming. Os dados originais e as variáveis vem de [neste repositorio](https://github.com/nazareno/imdb-series) . Lá tem a explicação de como os dados foram gerados e do significado de cada variável.
 
 ```{r}
 dados <- read_csv(here("data/series_from_imdb.csv"), 
@@ -26,7 +35,7 @@ dados <- read_csv(here("data/series_from_imdb.csv"),
 ```
 
 ## Conjunto de dados de analise
-Diante do conjunto de dados coletados do site IMDB, onde contem dados sobre algumas séries populares na atualidade.
+Diante do conjunto de dados coletados, onde contem dados sobre algumas séries populares na atualidade.
 Na análise desse notebook foram escolhidas 3 série bastante popular atualmente, são elas:
 
 * The Blacklist
@@ -45,7 +54,7 @@ Na análise desse notebook foram escolhidas 3 série bastante popular atualmente
 Analisando os dados escolhidos observa que os dados não possuem valores estranhos e não possui um número de variação considerável e desse modo podemos analisar e utilizar o conjunto de dados sem necessariamente utilizar uma filtragem nos dados.
 
 ## Primeira pergunta 
-Analisaremos o quão bem avaliada as séres no IMDB e desse modo tentar a chegar a uma aproximação de qual serie diante do conjunto escolhido seria a mais bem avaliada de acordo com os votos dos usuarios do site IMDB.
+Analisaremos o quão bem avaliada as séres no [IMDB](https://www.imdb.com/)  e desse modo tentar a chegar a uma aproximação de qual serie diante do conjunto escolhido seria a mais bem avaliada de acordo com os votos dos usuarios.
 
 ```{r}
     dados_escolhidos %>%
@@ -100,20 +109,37 @@ Analisaremos de acordo com as temporadas das séries se ocorreu mudanças sigini
 
 ```{r}
     dados_escolhidos %>% 
-    ggplot(aes(x= season_ep,
+    ggplot(aes(x = season_ep,
                y = user_rating,
-               color=season,
-               group = season)) +
-    geom_line() +
-    geom_point(size = 0.8) + 
-    facet_wrap(~ series_name) 
+               color = series_name))+
+    geom_jitter(width = 0.2) +
+    facet_grid(series_name ~ season) + 
+    labs(y = "Ratings dos usuários", x = "Numero de Episodio por Temporada")
     
 ```
 
-Considerando de forma separada para cada série analisamos os pontos atribuídos a cada episódios de acordo com a temporada e desse modo verificamos que não ocorre uma variação significativa ao longo das temporadas.
+De acordo com gráfico acima observamos que a série The Blaclist possui uma variação de pontos atribuídos como podemos observar que na primeira temporada a pontuação atribuída se concentram em algo entre 8,0 e 9,0 e ao decorrer das próximas temporadas observamos que os que pontos que significa os voto atribuído vão diminuindo e na quarta temporada os pontos se dividem na metade ficando uma parte entre 7,0 e 8,0 desse modo verificamos que ao longo das temporadas ocorreu uma mudança considerável.
+Em relação à série Vikings enxergamos que existe uma diferença da primeira em relação á segunda temporada onde a concentração de pontos está entre 8,0 e 9,0 e mantendo nas temporadas subsequentes.
+A série House of Cards ao longo de suas temporadas mantêm sua concentração de pontos entre 8,0 e 9,0 e ao longo das temporadas subsequentes verificamos que o número de episódios avaliados acima de 9,0 aumenta.
+No, mas verificamos que as três séries se mantêm no intervalo de 8,0 e 9,0 na avaliação atribuídas a seus episódios á partir disto verificamos que os episódios são bem avaliados em sua maioria.
+
+```{r}
+dados_escolhidos %>%
+    group_by(series_name,
+             season) %>%
+    summarise(media = mean(user_rating)) %>%
+    ggplot(aes(x = season, 
+               y = media, 
+               color = series_name)) +
+    geom_point()+
+    labs(y = "Media", x = "Temporada")
+    
+```
+
+Como podemos observar no gráfico acima, verificamos que na 1 temporada a série Vikigs possuía uma média menor entre às duas outras séries, mas como mostrado á partir da segunda temporada conferimos que Vikings aumentou consideravelmente sua média (cerca de 0,5) no, mas o gráfico nos mostra que House of Cards em todas suas temporadas se manteve com uma média de votos dos usuários superior as outras séries.
 
 ## Conclusão
-Diante das análises observadas acima, consideramos que a série House of Cards como mais bem avaliada pelos usuários no site IMDB diante no conjunto avaliado, tendo uma diferença pequena entre as outras duas series avaliadas no processo em relação a suas médias e considerando a concentração de votos de House of Cards em sua maioria superiores a nota 8.5.
+Diante das análises observadas acima, consideramos que a série House of Cards como mais bem avaliada pelos usuários no site [IMDB](https://www.imdb.com/) diante no conjunto avaliado, tendo uma diferença pequena entre as outras duas series avaliadas no processo em relação a suas médias e considerando a concentração de votos de House of Cards em sua maioria superior à nota 8,5 e também considerando á analise por temporada verificamos que House of Cards manteve superior sua média de votos por episódio em todas as temporadas sem ter nenhuma variação.
 
 ## Qual das séries que você escolheu tem episódios de qualidade mais irregular segundo o IMDB? A diferença é grande? Pequena?
 
@@ -156,6 +182,5 @@ dados_escolhidos %>%
 
 ## Conclusão
 Observando esse gráfico pode concluir que a série The Blacklist possui maior irregularidade entre as notas de seus episódios e diante da análise feita observamos também que a diferença perante House of cards que apareceu em segundo no lugar no grafico, relativamente pequena baseado nas medidas do desvio padrão (0.09 a mais)  e IQR (0.25 a mais), por fim verificamos que a diferença de qualidade dos episódios de The Blacklist em relação a outras como pequena. 
-
 
 
