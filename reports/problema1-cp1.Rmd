@@ -200,3 +200,17 @@ Analise em questão é sobre os episódios no início/ fim da temporada e verifi
 De acordo com o gráfico na primeira e segunda temporada verificamos que House of Cards tem seus episódios do início bem avaliados, mas com o decorrer da metade (temporada) seu nível cai e volta a subir no final da temporada, em relação à terceira e quarta verificamos que o início não foi tão bem, mas á série consegue manter um nível alto na metade/fim.
 The Blacklist mostra um comportamento padrão para as 4 temporadas de modo que seus episódios do início/fim tendem á ser mais bem avaliados do que os episódios da metade da temporada.
 Vikings apenas sua primeira temporada demostra um comportamento diferente das demais como observamos os primeiros/últimos episódios como não tão bem avaliados, mas no decorrer da metade seus episódios demostram um padrão muito bem avaliados, em relação as outras temporadas observa um comportamento padrão onde o início e metade da temporada se mantêm na mesma avaliação aumentando no episódio finais de cada temporada.
+
+## Qual das séries ou temporadas tem episódios mais sem graça? (Um episódio é sem graça se ninguém nem ama nem odeia ele)
+
+Analise de episódios mais sem graça e para isso utilizaremos o episódios em que obtiveram mais nota 5 considerando uma nota de 1 á 10 a nota 5 refere a metade do intervalo e desse modo se encaixa no tipo de episódio sem graça.
+
+```{r}
+dados_escolhidos %>%
+    group_by(series_name) %>%
+    ggplot(aes(x = r5, y = season, color = series_name)) +
+    geom_point(alpha = .7) +
+    labs(y = "Temporadas", x = "Proporção de votos neutros (Igual á 5)") 
+    
+```
+Como demostrado no gráfico acima a série que possui maior numero de episódios sem graça é The Blacklist, mas especificamente nas segunda e quarta temporada onde tem um número crescente de episódios sem graça, já na primeira temporada verificamos que Vikings e House of Cards obteve um número maior de número de episódios sem graça, porém isto não influencia no resultado final.
