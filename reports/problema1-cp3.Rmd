@@ -117,17 +117,36 @@ Diante do que foi exposto acima observamos que ocorreu uma diferença em relaç�
 
 ## Os episódios que recebe mais votos dos usuários são episódios bom/ruins.
 
-Para isso iremos separar em um grupo de 10 episódios para cada série no caso os 10 episódios mais votados que cada série possui.
+Pra responder essa pergunta iremos observar o número de votos recebido por episódio e as notas atribuidas para desse modo verifica a relação dos votos com sua definição(bom/ruim). 
 
 ```{r}
 dados_escolhidos %>%
   arrange(-user_votes) %>%
   ggplot(aes(x = user_rating,y = user_votes,color = series_name)) +
-  geom_jitter(width = 0.2) 
+  geom_jitter(width = 0.2) +
+  labs(y = "Numero de votos recebidos por episódio", x ="Nota do episódio")
 ```
+Considerando episódios bons como episódios com nota superior a (nove), então diante do gráfico acima observamos que para esse conjunto de dados não existiu nenhum valor inferior à nota 7 e assim tem que o intervalo de 9 – 10 com uma concentração de pontos considerado e assim analisamos que a maior concentração de votos(Episódios que receberam o maior número de votos) está dentro do intervalo de 9 á 10.
+
+Para melhorar nossa qualificação separa um conjunto de dados contendo os 10 episódios mais bem avaliados.
+```{r}
+  top_10_avaliados <- dados_escolhidos %>% arrange(-user_votes) %>% top_n(10)
+
+```
+Para uma medida de certeza iremos calcular a correlação entre o número de votos do usuários e a proporção de episódios bom(Notas entre 9 á 10), desse modo utilizamos os 10 episódios mais votados do conjunto. Como sabemos a correlação mede á relação dentro de uma ampla classe de relações estatísticas que envolva dependência entre duas variáveis.
 
 ```{r}
-
-  cor(dados_escolhidos$user_votes,dados_escolhidos$r10)
+ cor(top_10_avaliados$user_votes,(top_10_avaliados$r9 + top_10_avaliados$r10))
 ```
+Como observamos o valor acima temos uma correção *moderada* dado que a correlação é medido entre -1 e 1 e só consideramos uma correlação fraca com valores próximos á 0 e só é forte com valores próximos á 1 ou -1.
+Assim iremos calcular agora á correlação da proporção de episódios ruins(Episódios entre 1 e 2) e os 10 episódios mais bem votados da amostra.
+
+```{r}
+cor(top_10_avaliados$user_votes,(top_10_avaliados$r1 + top_10_avaliados$r2))
+```
+
+Observamos que é uma correlação muito fraca entre as variáveis dando assim que a relação entre os episódios bem votados e os episódios ruins como *fraca*.
+
+## Conclusão 
+Diante dessas analises observamos que os episódios mais bem votados tendem a ser episódios bons tendo em visto a medida de correlação de análise observamos uma dependência moderada e como visto no gráfico observamos que a concentração de ponto relacionado a o número de voto recebido é distribuído no intervalo de 9 á 10 e como analisamos o episódio mais votado do conjunto tem como sua nota no conjunto entre 9 e 10. *Concluímos que os episódios mais votados tendem a ser episódios qualificados como bom.*
 
