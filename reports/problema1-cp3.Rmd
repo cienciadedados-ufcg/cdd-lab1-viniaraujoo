@@ -39,6 +39,13 @@ Para está analise utilizamos como critério de escolha o mesmo número de tempo
 * House of Cards
 * Vikings
 
+```{r}
+    dados_escolhidos <- dados %>% 
+    filter(series_name %in% c("The Blacklist",
+                              "House of Cards",
+                              "Vikings"))
+```
+
 ## Conhecendo os dados da analise.
 Para conhecer melhor sobre os dados das séries escolhidas, iremos plotar um gráfico em pontos e desse modo verificar a existência de algum valor considerado extremo discrepante.
 
@@ -53,17 +60,17 @@ Para conhecer melhor sobre os dados das séries escolhidas, iremos plotar um gr�
     labs(y = "Ratings dos usuários", x = "Séries Escolhidas")
 ```
 Podemos observar que a concentração de pontos de votos dos usuários em sua maioria entre 8,0 e 9,0.
-Observamos também que existe um valor específico para série The Blaclist como um valor extremo que no caso é a nota 7 no, mas consideramos que esse valor não é uma nota tão discrepante.
+Observamos também que existe um valor específico para série The Blacklist como um valor extremo que no caso é a nota 7 no, mas consideramos que esse valor não é uma nota tão discrepante.
 
 ## Explicação sobre estimadores utilizados 
 Para está analise o objetivo é responder as seguintes perguntas: 
 
 * A temporada mais bem avaliada da série possui uma maior proporção de notas 10?
-* Os episódios que recebe mais votos dos usuários são episódios bom/ruins.
+* Os episódios que recebem mais votos dos usuários são episódios bom/ruins?
 
 Com isso, utilizaremos alguns conceitos como : 
 
-* Media : é a soma dos valores dos elementos de um conjunto dividido pelo número de elementos nesse conjunto.
+* Média : é a soma dos valores dos elementos de um conjunto dividido pelo número de elementos nesse conjunto.
 * Mediana :  é o valor que separa a metade maior e a metade menor de uma amostra.
 * Correlação :  é qualquer relação dentro de uma ampla classe de relações estatísticas que envolva dependência entre duas variáveis. Tendo como parametro os valores entre -1 e 1, considerando que os valores porximos de 0 como correlação fraca e os valores proximos de -1 e 1 como fortes. 
 
@@ -111,11 +118,11 @@ The Blacklist| 3
 Vikings| 4
 
 ## Conclusão
-Diante do que foi exposto acima observamos que ocorreu uma diferença em relação às temporadas mais bem avaliadas e a proporção de notas 10 por temporada, observado os casos da série House of Cards e Vikings observamos que as suas temporadas melhor avaliada não foi as mesmas que obtiveram uma proporção maior de notas 10 e desse modo vemos que não existe uma relação para esse conjunto de dados em relação às temporadas melhor avaliada e a proporção de notas 10. 
+Diante do que foi exposto acima observamos que ocorreu uma diferença em relação às temporadas mais bem avaliadas e a proporção de notas 10 por temporada, observado os casos da série House of Cards e Vikings observamos que as suas temporadas melhor avaliadas não foram as mesmas que obtiveram uma proporção maior de notas 10 e desse modo vemos que não existe uma relação para esse conjunto de dados em relação às temporadas melhor avaliada e a proporção de notas 10. 
 
 
 
-## Os episódios que recebe mais votos dos usuários são episódios bom/ruins.
+## Os episódios que recebem mais votos dos usuários são episódios bom/ruins
 
 Pra responder essa pergunta iremos observar o número de votos recebido por episódio e as notas atribuidas para desse modo verifica a relação dos votos com sua definição(bom/ruim). 
 
@@ -129,7 +136,7 @@ dados_escolhidos %>%
 Considerando episódios bons como episódios com nota superior a (nove), então diante do gráfico acima observamos que para esse conjunto de dados não existiu nenhum valor inferior à nota 7 e assim tem que o intervalo de 9 – 10 com uma concentração de pontos considerado e assim analisamos que a maior concentração de votos(Episódios que receberam o maior número de votos) está dentro do intervalo de 9 á 10.
 
 Para melhorar nossa qualificação separa um conjunto de dados contendo os 10 episódios mais bem avaliados.
-```{r}
+```{r message=FALSE}
   top_10_avaliados <- dados_escolhidos %>% arrange(-user_votes) %>% top_n(10)
 
 ```
