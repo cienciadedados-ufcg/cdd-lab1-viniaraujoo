@@ -21,7 +21,7 @@ theme_set(theme_bw())
 
 ## Conjunto de dados utilizado
 
-Análise exploratória de dados do [IMDB](https://www.imdb.com/)  sobre seriados de TV e Streaming. Os dados originais e as variáveis vem de [neste repositorio](https://github.com/nazareno/imdb-series) . Lá tem a explicação de como os dados foram gerados e do significado de cada variável.
+Análise exploratória de dados do [IMDB](https://www.imdb.com/)  sobre seriados de TV e Streaming. Os dados originais e as variáveis vêm [deste repositorio](https://github.com/nazareno/imdb-series). Lá tem a explicação de como os dados foram gerados e do significado de cada variável.
 
 ```{r}
 dados <- read_csv(here("data/series_from_imdb.csv"), 
@@ -35,8 +35,8 @@ dados <- read_csv(here("data/series_from_imdb.csv"),
 ```
 
 ## Conjunto de dados de analise
-Diante do conjunto de dados coletados, onde contem dados sobre algumas séries populares na atualidade.
-Na análise desse notebook foram escolhidas 3 série bastante popular atualmente, são elas:
+O conjunto de dados coletados contém informações sobre algumas séries populares na atualidade.
+Na análise desse notebook foram escolhidas 3 séries bastante populares atualmente, são elas:
 
 * The Blacklist
 * House of Cards
@@ -51,10 +51,10 @@ Na análise desse notebook foram escolhidas 3 série bastante popular atualmente
     
 ```
 
-Analisando os dados escolhidos observa que os dados não possuem valores estranhos e não possui um número de variação considerável e desse modo podemos analisar e utilizar o conjunto de dados sem necessariamente utilizar uma filtragem nos dados.
+Analisando os dados escolhidos observa-se que os dados não possuem valores estranhos e não possuem um número de variação considerável e desse modo podemos analisar e utilizar o conjunto de dados sem necessariamente utilizar uma filtragem nos dados.
 
 ## Primeira pergunta 
-Analisaremos o quão bem avaliada as séres no [IMDB](https://www.imdb.com/)  e desse modo tentar a chegar a uma aproximação de qual serie diante do conjunto escolhido seria a mais bem avaliada de acordo com os votos dos usuarios.
+Analisaremos o quão bem avaliada as séres no [IMDB](https://www.imdb.com/)  e desse modo tentar a chegar a uma aproximação de qual serie diante do conjunto escolhido seria a mais bem avaliada de acordo com os votos dos usuários.
 
 ```{r}
     dados_escolhidos %>%
@@ -81,10 +81,10 @@ Para conhecer o conjunto de dados consideramos o histograma acima para examinar 
 ```
 
 De acordo com o gráfico acima podemos observa que House of Cards tem melhor avaliação se observarmos a mediana dos votos.
-Podemos observa neste gráfico que concentração de notas de House of Cards em sua maioria superior a 8,5 algo que não observamos nas outras séries avaliadas.
+Podemos observar neste gráfico que concentração de notas de House of Cards em sua maioria superior a 8,5 algo que não observamos nas outras séries avaliadas.
 As demais séries verificamos uma diferença pequena em relação às médias.
 
-Notamos que The Blacklist possui um número um pouco superior de episódios, e verificamos também que existe dados discrepantes com nota igual a 7.
+Notamos que The Blacklist possui um número um pouco superior de episódios, e verificamos também que existem dados discrepantes com nota igual a 7.
 
 
 ```{r}
@@ -118,8 +118,8 @@ Analisaremos de acordo com as temporadas das séries se ocorreu mudanças sigini
     
 ```
 
-De acordo com gráfico acima observamos que a série The Blaclist possui uma variação de pontos atribuídos como podemos observar que na primeira temporada a pontuação atribuída se concentram em algo entre 8,0 e 9,0 e ao decorrer das próximas temporadas observamos que os que pontos que significa os voto atribuído vão diminuindo e na quarta temporada os pontos se dividem na metade ficando uma parte entre 7,0 e 8,0 desse modo verificamos que ao longo das temporadas ocorreu uma mudança considerável.
-Em relação à série Vikings enxergamos que existe uma diferença da primeira em relação á segunda temporada onde a concentração de pontos está entre 8,0 e 9,0 e mantendo nas temporadas subsequentes.
+De acordo com gráfico acima observamos que a série The Blacklist possui uma variação de pontos atribuídos como podemos observar que na primeira temporada a pontuação atribuída se concentra em algo entre 8,0 e 9,0 e ao decorrer das próximas temporadas observamos que os que pontos que significa os voto atribuído vão diminuindo e na quarta temporada os pontos se dividem na metade ficando uma parte entre 7,0 e 8,0 desse modo verificamos que ao longo das temporadas ocorreu uma mudança considerável.
+Em relação à série Vikings enxergamos que existe uma diferença da primeira em relação à segunda temporada onde a concentração de pontos está entre 8,0 e 9,0 e mantendo nas temporadas subsequentes.
 A série House of Cards ao longo de suas temporadas mantêm sua concentração de pontos entre 8,0 e 9,0 e ao longo das temporadas subsequentes verificamos que o número de episódios avaliados acima de 9,0 aumenta.
 No, mas verificamos que as três séries se mantêm no intervalo de 8,0 e 9,0 na avaliação atribuídas a seus episódios á partir disto verificamos que os episódios são bem avaliados em sua maioria.
 
@@ -130,8 +130,10 @@ dados_escolhidos %>%
     summarise(media = mean(user_rating)) %>%
     ggplot(aes(x = season, 
                y = media, 
-               color = series_name)) +
-    geom_point()+
+               color = series_name,
+               group = series_name)) +
+    geom_line() +
+    facet_grid(series_name ~ .) +
     labs(y = "Media", x = "Temporada")
     
 ```
