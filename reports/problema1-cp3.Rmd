@@ -53,22 +53,22 @@ Para conhecer melhor sobre os dados das séries escolhidas, iremos plotar um gr�
     labs(y = "Ratings dos usuários", x = "Séries Escolhidas")
 ```
 Podemos observar que a concentração de pontos de votos dos usuários em sua maioria entre 8,0 e 9,0.
-Observamos também que existe um valor específico para série The Blaclist como um valor extremo que no caso é a nota 7 no, mas consideramos que esse valor não é uma nota tão discrepante.
+Observamos também que existe um valor específico para série The Blacklist como um valor extremo que no caso é a nota 7 no, mas consideramos que esse valor não é uma nota tão discrepante.
 
 ## Explicação sobre estimadores utilizados 
 Para está analise o objetivo é responder as seguintes perguntas: 
 
 * A temporada mais bem avaliada da série possui uma maior proporção de notas 10?
-* Os episódios que recebe mais votos dos usuários são episódios bom/ruins.
+* Os episódios que recebem mais votos dos usuários são episódios bom/ruins?
 
 Com isso, utilizaremos alguns conceitos como : 
 
-* Media : é a soma dos valores dos elementos de um conjunto dividido pelo número de elementos nesse conjunto.
+* Média : é a soma dos valores dos elementos de um conjunto dividido pelo número de elementos nesse conjunto.
 * Mediana :  é o valor que separa a metade maior e a metade menor de uma amostra.
 * Correlação :  é qualquer relação dentro de uma ampla classe de relações estatísticas que envolva dependência entre duas variáveis. Tendo como parametro os valores entre -1 e 1, considerando que os valores porximos de 0 como correlação fraca e os valores proximos de -1 e 1 como fortes. 
 
 
-## A temporada mais bem avaliada da série possui uma maior proporção de notas 10?
+## As temporadas mais bem avaliadas das séries possuem uma maior proporção de notas 10?
  Para está pergunta iremos analisar as médias de cada temporada e desse modo verificar qual temporada de cada série foi a mais bem avaliada. 
  
 ```{r}
@@ -76,11 +76,13 @@ Com isso, utilizaremos alguns conceitos como :
   group_by(series_name,
            season) %>%
   summarise(media = mean(user_rating)) %>%
-  ggplot(aes(x = series_name, 
+  ggplot(aes(x = season, 
              y = media,
-             color = season)) + 
-  geom_point() + 
-  labs(y = "Média", x = "Séries")
+               color = series_name,
+               group = series_name)) +
+    geom_line() +
+   facet_grid(series_name ~ .) +
+     labs(y = "Media", x = "Temporada")
 ```
  
 Como podemos observa no gráfico acima, temos para cada série sua respectiva temporada mais bem avaliada em relação á sua média:  
@@ -110,12 +112,29 @@ House of Cards | 4
 The Blacklist| 3
 Vikings| 4
 
+Diante dessa analise nos veio a pergunta: *Por que Vikings possui uma maior proporção de nota 10 na 4 temporada e sua 2 temporada é a mais bem avaliada*
+
+Para responder essa perguntas observamos o séguinte gráfico. 
+
+```{r}
+ dados_escolhidos %>% 
+    filter(series_name == "Vikings") %>%
+    ggplot(aes(x= season,
+               y = user_rating,
+               color=season)) +
+    geom_boxplot(width = .5,
+                 outlier.color = NA) + 
+    geom_jitter(width = 0.2) +
+    labs(y = "Ratings dos usuários", x = "Temporadas")
+```
+Como podemos observar á 4 temporada tem mais episódios do que as demais temporadas e observamos que a concentração e a média das notas é inferior a da 2 temporada que podemos observar que possui uma concentração maior em torno de sua média, por isso temos que na 4 temporada uma proporção maior de nota 10, mas os outros episódios não tendem a seguir notas altas e assim a média da 4 temporada é inferior.
+
 ## Conclusão
-Diante do que foi exposto acima observamos que ocorreu uma diferença em relação às temporadas mais bem avaliadas e a proporção de notas 10 por temporada, observado os casos da série House of Cards e Vikings observamos que as suas temporadas melhor avaliada não foi as mesmas que obtiveram uma proporção maior de notas 10 e desse modo vemos que não existe uma relação para esse conjunto de dados em relação às temporadas melhor avaliada e a proporção de notas 10. 
+Diante do que foi exposto acima observamos que ocorreu uma diferença em relação às temporadas mais bem avaliadas e a proporção de notas 10 por temporada, observado os casos da série House of Cards e Vikings observamos que as suas temporadas melhor avaliadas não foram as mesmas que obtiveram uma proporção maior de notas 10 e desse modo vemos que não existe uma relação para esse conjunto de dados em relação às temporadas melhor avaliada e a proporção de notas 10. 
 
 
 
-## Os episódios que recebe mais votos dos usuários são episódios bom/ruins.
+## Os episódios que recebem mais votos dos usuários são episódios bom/ruins
 
 Pra responder essa pergunta iremos observar o número de votos recebido por episódio e as notas atribuidas para desse modo verifica a relação dos votos com sua definição(bom/ruim). 
 
@@ -128,9 +147,11 @@ dados_escolhidos %>%
 ```
 Considerando episódios bons como episódios com nota superior a (nove), então diante do gráfico acima observamos que para esse conjunto de dados não existiu nenhum valor inferior à nota 7 e assim tem que o intervalo de 9 – 10 com uma concentração de pontos considerado e assim analisamos que a maior concentração de votos(Episódios que receberam o maior número de votos) está dentro do intervalo de 9 á 10.
 
-Para melhorar nossa qualificação separa um conjunto de dados contendo os 10 episódios mais bem avaliados.
-```{r}
-  top_10_avaliados <- dados_escolhidos %>% arrange(-user_votes) %>% top_n(10)
+Para melhorar nossa avaliação iremos separar do conjunto de dados apenas os 10 episódios mais bem avaliados.
+```{r message=FALSE}
+  top_10_avaliados <- dados_escolhidos %>% 
+  arrange(-user_votes) %>% 
+  top_n(10)
 
 ```
 Para uma medida de certeza iremos calcular a correlação entre o número de votos do usuários e a proporção de episódios bom(Notas entre 9 á 10), desse modo utilizamos os 10 episódios mais votados do conjunto. Como sabemos a correlação mede á relação dentro de uma ampla classe de relações estatísticas que envolva dependência entre duas variáveis.
@@ -149,4 +170,39 @@ Observamos que é uma correlação muito fraca entre as variáveis dando assim q
 
 ## Conclusão 
 Diante dessas analises observamos que os episódios mais bem votados tendem a ser episódios bons tendo em visto a medida de correlação de análise observamos uma dependência moderada e como visto no gráfico observamos que a concentração de ponto relacionado a o número de voto recebido é distribuído no intervalo de 9 á 10 e como analisamos o episódio mais votado do conjunto tem como sua nota no conjunto entre 9 e 10. *Concluímos que os episódios mais votados tendem a ser episódios qualificados como bom.*
+Á partir disto, nos veio a seguinte pergunta : *O episódios considerados ruins eles tendem a ser os menos votados pelos usuários*
+
+### O episódios considerados ruins tendem a ser os menos votados pelos usuários
+Para melhorar nossa avaliação iremos separar do conjunto de dados apenas os 10 episódios que menos foram avaliados.
+```{r message=FALSE}
+  downn_10_avaliacao <- dados_escolhidos %>% arrange(user_votes) %>% slice(c(1:10))
+```
+
+Para conhecer melhor os 10 episódios menos votados pelo usuários temos: 
+
+```{r}
+downn_10_avaliacao 
+```
+Observamos que todos os episódios são da mesma série e da mesma temporada.
+
+Para temos uma precisão melhor na resposta iremos medir a correlação, tendo em vista que episódio considerado ruins com notas inferiores a 5 ou com proporção entre 1 e 2. Para isso temos:
+
+```{r}
+cor(downn_10_avaliacao $user_votes,(downn_10_avaliacao $r1 + downn_10_avaliacao $r2))
+```
+Observamos uma correlaçao fraca/moderada.
+
+Para melhorar iremos plotar um gráfico e observa como as notas estão sendo distribuídas para esse conjunto.
+
+```{r}
+downn_10_avaliacao %>%
+  ggplot(aes(x = user_votes,
+             y= user_rating)) +
+  geom_point() +
+  labs(y= "Nota do episódio", x = "Quantidade de votos recebidos")
+```
+
+Como podemos observa no gráfico acima, os episódios menos votados possui notas superiores a 7 e observamos também que tem um episódio que recebeu nota 9,2 que para essa analise o episódio é considerado como bom.
+Desse modo verificamos que não existe uma relação para que os episódios menos votas implica que os episódios é ruim.
+
 
