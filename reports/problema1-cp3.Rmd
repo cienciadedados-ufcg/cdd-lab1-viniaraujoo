@@ -205,4 +205,3 @@ downn_10_avaliacao %>%
 Como podemos observa no gráfico acima, os episódios menos votados possui notas superiores a 7 e observamos também que tem um episódio que recebeu nota 9,2 que para essa analise o episódio é considerado como bom.
 Desse modo verificamos que não existe uma relação para que os episódios menos votas implica que os episódios é ruim.
 
-
