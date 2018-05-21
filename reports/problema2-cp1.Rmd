@@ -1,6 +1,8 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Qual á série mais querida do publico."
+output:
+  html_document:
+    df_print: paged
 ---
 
 
@@ -11,7 +13,7 @@ library(here)
 library(plotly)
 ```
 
-```{r}
+```{r echo=FALSE}
 dados <- read_csv(here("data/series_from_imdb.csv"), 
                     progress = FALSE,
                     col_types = cols(.default = col_double(), 
@@ -23,7 +25,7 @@ dados <- read_csv(here("data/series_from_imdb.csv"),
 ```
 
 
-```{r}
+```{r echo=FALSE}
     dados_escolhidos <- dados %>% 
     filter(series_name %in% c("The Blacklist",
                               "House of Cards",
@@ -31,40 +33,22 @@ dados <- read_csv(here("data/series_from_imdb.csv"),
     
 ```
 
-```{r}
-dados_escolhidos %>%
-  mutate('User Rating' = user_rating,'Season Ep' = season_ep,'Series' = series_name,'User Votes' = user_votes)
+Analisamos as séries The Blaclist, Vikings e House of Cards com o intuito de demostrar os episódios mais bem avaliados, com isso demostrar qual é os episódios mais bem avaliados, sua nota, série que pertence e a quantidade de votos recebidos pelos usuários.
 
-```
-
-```{r}
+```{r echo=FALSE}
 dados_escolhidos %>%
   arrange(-user_rating) %>%
   plot_ly(x = ~user_rating,
-             y = ~season_ep,
+             y = ~user_votes,
              color = ~series_name,
              size = ~user_votes,
             text = ~paste("Pontuação Episódio:", user_rating,
-                          "\nQuantidade de votos dos usuarios:",user_votes))
-            
+                          "\nEpisódio:",season_ep,
+                           "\nTemporada:",season,
+                          "\nQuantidade de votos dos úsuarios:",user_votes))
 ```
 
-
-
-```{r}
-  dados_escolhidos %>%
-  mutate('User Rating' = user_rating,
-         'Season Ep' = season_ep,
-         'Serie' = series_name,
-         'User Votes' = user_votes) %>%
-  arrange(-`User Rating`) %>%
-  ggplot(aes(x = `User Rating`,
-             y =`Season Ep`,
-             color = `Serie`,
-             size = `User Votes`)) +
-  geom_jitter(width = 1.3) +
-  labs(y = "Notas por episódio", x ="Episódio por temporada")
-
-##ggplotly(j)
-```
+Como podemos observar, á série *House of Cards* possui os episódios mais bem votados do conjunto com a nota 9,6 no, mas podemos destacar o episódio 1 da 2 temporada que foi o mais bem votado pelo usuarios e também o que recebeu a maior nota.
+Destaca-se também a série The Blacklist que seus episódios não são muito avaliados por usuários como a outras séries, ficando em sua maioria entre 200 a 1100 votos.
+Concluímos que a série House of Cards a mais bem avaliada pelo público assim como também é a série que possui mais votos do úsuarios, com isso podemos dizer que perante as outras séries analisadas *House of Cards é a série mais "queridinha" do público*.
 
