@@ -31,15 +31,40 @@ dados <- read_csv(here("data/series_from_imdb.csv"),
     
 ```
 
+```{r}
+dados_escolhidos %>%
+  mutate('User Rating' = user_rating,'Season Ep' = season_ep,'Series' = series_name,'User Votes' = user_votes)
+
+```
+
+```{r}
+dados_escolhidos %>%
+  arrange(-user_rating) %>%
+  plot_ly(x = ~user_rating,
+             y = ~season_ep,
+             color = ~series_name,
+             size = ~user_votes,
+            text = ~paste("Pontuação Episódio:", user_rating,
+                          "\nQuantidade de votos dos usuarios:",user_votes))
+            
+```
+
 
 
 ```{r}
-  j <- dados_escolhidos %>%
-  arrange(-user_votes) %>%
-  ggplot(aes(x = user_rating,y =season_ep,color = series_name,size = user_votes)) +
+  dados_escolhidos %>%
+  mutate('User Rating' = user_rating,
+         'Season Ep' = season_ep,
+         'Serie' = series_name,
+         'User Votes' = user_votes) %>%
+  arrange(-`User Rating`) %>%
+  ggplot(aes(x = `User Rating`,
+             y =`Season Ep`,
+             color = `Serie`,
+             size = `User Votes`)) +
   geom_jitter(width = 1.3) +
   labs(y = "Notas por episódio", x ="Episódio por temporada")
 
-ggplotly(j)
+##ggplotly(j)
 ```
 
