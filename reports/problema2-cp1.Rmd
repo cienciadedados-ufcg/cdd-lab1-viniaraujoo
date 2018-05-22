@@ -7,7 +7,7 @@ output:
 
 
 
-```{r}
+```{r echo=FALSE,warning=FALSE, message=FALSE}
 library(tidyverse)
 library(here)
 library(plotly)
@@ -35,7 +35,7 @@ dados <- read_csv(here("data/series_from_imdb.csv"),
 
 Analisamos as séries The Blaclist, Vikings e House of Cards com o intuito de demostrar os episódios mais bem avaliados, com isso demostrar qual é os episódios mais bem avaliados, sua nota, série que pertence e a quantidade de votos recebidos pelos usuários.
 
-```{r echo=FALSE}
+```{r echo=FALSE,warning=FALSE, message=FALSE}
 dados_escolhidos %>%
   arrange(-user_rating) %>%
   plot_ly(x = ~user_rating,
