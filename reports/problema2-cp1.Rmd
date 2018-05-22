@@ -1,5 +1,5 @@
 ---
-title: "Qual á série mais querida do publico."
+title: "Qual á série mais 'queridinha' do publico."
 output:
   html_document:
     df_print: paged
@@ -50,5 +50,5 @@ dados_escolhidos %>%
 
 Como podemos observar, á série *House of Cards* possui os episódios mais bem votados do conjunto com a nota 9,6 no, mas podemos destacar o episódio 1 da 2 temporada que foi o mais bem votado pelo usuarios e também o que recebeu a maior nota.
 Destaca-se também a série The Blacklist que seus episódios não são muito avaliados por usuários como a outras séries, ficando em sua maioria entre 200 a 1100 votos.
-Concluímos que a série House of Cards a mais bem avaliada pelo público assim como também é a série que possui mais votos do úsuarios, com isso podemos dizer que perante as outras séries analisadas *House of Cards é a série mais "queridinha" do público*.
+Concluímos que a série House of Cards a mais bem avaliada pelo público  também é a série que possui mais votos dos úsuarios, com isso podemos dizer que perante as outras séries analisadas *House of Cards é a série mais "queridinha" do público*.
 
